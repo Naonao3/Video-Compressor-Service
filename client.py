@@ -7,21 +7,24 @@ import sys
 def main():
     
     sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    server_address = "0.0.0.0"
-    server_port = 9001
+    host = "localhost"
+    port = 9001
     
-    print('connecting to {}'.format(server_address))
+    print('connecting to {}'.format(host))
     
     try:
-        sock.connect((server_address,server_port))
+        sock.connect((host,port))
     except socket.error as err:
         print(err)
         sys.exit(1)
     
     try:
+        print(sock.recv(1024).decode("utf-8"))
+
         filepath = input("Type in a file to upload --> ")
         
         with open(filepath,"rb") as f:
+
             f.seek(0,os.SEEK_END)
             file_size = f.tell()
             f.seek(0,0)
@@ -30,7 +33,8 @@ def main():
                 raise Exception("File must be below 2GB.")
             
             file_name = os.path.basename(f.name)
-            if file_name[:-3] != "mp4":
+
+            if file_name[-3:] != "mp4":
                 raise Exception("File must be `mp4'.")
             
             data_json ={
@@ -41,11 +45,13 @@ def main():
             
             sock.send(json.dumps(data_json).encode("utf-8"))
             
-            data = f.read(4096)
+            data = f.read(1400)
+            print("Sending....")
+
             while data:
-                print("Sending....")
+                
                 sock.send(data)
-                data = f.read(4096)
+                data = f.read(1400)
     
         while True:
             select_service = input("Please select service from 1 to 5...\n" + \
@@ -96,19 +102,19 @@ def main():
             else:
                 print("Please input from 1 to 5")
             
-            sock.send(command.encode("utd-8"))
+            sock.send(command.encode("utf-8"))
             
-            print(sock.recv(1024).decode('utf-8'))
+            print(sock.recv(1024).decode("utf-8"))
 
-                # サービスを続けるか確認
+                
             continue_question = input('Do you want to continue ?\n' + \
                                     '0 : No\n' + \
                                     '1 : Yes\n')
                 
-            sock.send(continue_question.encode('utf-8'))
+            sock.send(continue_question.encode("utf-8"))
             
-            if continue_question == '0':
-                print(sock.recv(1024).decode('utf-8'))
+            if continue_question == "0":
+                print(sock.recv(1024).decode("utf-8"))
                 break
                 
 
