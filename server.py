@@ -3,6 +3,7 @@ import os
 import json
 import subprocess
 
+
 def main():
     
     sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -16,18 +17,19 @@ def main():
     sock.listen(1)
     
     while True:
+
         connection, address = sock.accept()
         print("Connected to client: {}".format(address))
+
         try: 
-            print("connection from {}".format(host))
+            print("Received connection from {}".format(host))
             
-            connection.send("Welcom to the program 'Video Compressor Service!".encode("utf-8"))
+            connection.send("Welcom to the program 'Video Compressor Service!'".encode("utf-8"))
             
             data = connection.recv(1024).decode("utf-8")
             print(data)
  
             receivedData = json.loads(data)
-            
 
             file_name = receivedData["file_name"]
             file_length = receivedData["file_length"]
@@ -47,10 +49,8 @@ def main():
                     f.write(data)
                     file_size -= len(data)
                     
-                    print("Finished downloading the file from clietn")
+                    #print("Finished downloading the file from clietn")
             connection.send("Upload finish".encode("utf-8"))
-
-
             
 
             while True:
