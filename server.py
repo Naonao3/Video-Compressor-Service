@@ -27,7 +27,7 @@ def main():
             connection.send("Welcom to the program 'Video Compressor Service!'".encode("utf-8"))
             
             data = connection.recv(1024).decode("utf-8")
-            print(data)
+            #print(data)
  
             receivedData = json.loads(data)
 
@@ -58,7 +58,7 @@ def main():
                 command = command.split(" ")
                 subprocess.run(command)
 
-                connection.send("Process done! new file is ready.".encode("utf-8"))
+                connection.send("Process done! new file is ready.\n".encode("utf-8"))
 
                 continue_question = connection.recv(1024).decode("utf-8")
 

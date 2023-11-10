@@ -56,6 +56,16 @@ def main():
             print(sock.recv(1024).decode("utf-8"))
     
         while True:
+            """
+            command = ""
+            height = ""
+            width = ""
+            start = ""
+            end = ""
+            flamerate = ""
+            resize = ""
+            """
+
             select_service = input("Please select service from 1 to 5...\n" + \
                                     "1 --> compress video file\n" + \
                                     "2 --> change video resolution\n" + \
@@ -68,11 +78,11 @@ def main():
                                         "2 --> medium\n" + \
                                         "3 --> low\n")
                 if compression_level == "1":
-                    command = "ffmpeg -i " + file_name + "-c:v libx265 -b:v output/output_high.mp4"
+                    command = "ffmpeg -i " + file_name + " -c:v libx265 -b:v output/output_high.mp4"
                 elif compression_level == "2":
-                    command =  "ffmpeg -i " + file_name + "-c:v libx265 output/output_medium.mp4"
+                    command =  "ffmpeg -i " + file_name + " -c:v libx265 output/output_medium.mp4"
                 elif compression_level == "3":
-                    command = "ffmpeg -i " + file_name + "-c:v libx264 output/output_low.mp4"
+                    command = "ffmpeg -i " + file_name + " -c:v libx264 output/output_low.mp4"
                 else:
                     print("Please select from 1 to 3")
             
@@ -86,20 +96,20 @@ def main():
                 command = "ffmpeg -i " + file_name + " -s " +  width + ":" + height + " output/output_resolution.mp4"
             
             elif select_service == "3":
-                height = input('Please enter the height --> ')
-                width = input('Please enter the width --> ')
-                command = 'ffmpeg -i ' + file_name + ' -pix_fmt yuv420p -aspect ' + height + ':' + width + ' output/output_aspect.mp4'
+                height = input("Please enter the height --> ")
+                width = input("Please enter the width --> ")
+                command = "ffmpeg -i " + file_name + " -pix_fmt yuv420p -aspect " + height + ":" + width + " output/output_aspect.mp4"
             
             elif select_service == "4":
-                    command = 'ffmpeg -i ' + file_name + ' -vn output/output_audio.mp3'
+                    command = "ffmpeg -i " + file_name + " -vn output/output_audio.mp3"
 
             elif select_service == "5":
-                start = input('Input start position (ex. 00:00:20) --> ')
-                end = input('Input end position (ex. 10) --> ')
-                flamerate = input('Input flame rate (ex. 10) --> ')
-                resize = input('Input resize (ex. 300) : ')
-                command = 'ffmpeg -ss ' + start + ' -i ' + file_name + ' -to ' + end + ' -r ' + flamerate + ' -vf scale=' + \
-                    resize + ':-1 output/output_gif.gif'
+                start = input("Input start position (ex. 00:00:20) --> ")
+                end = input("Input end position (ex. 10) --> ")
+                flamerate = input("Input flame rate (ex. 10) --> ")
+                resize = input("Input resize (ex. 300) : ")
+                command = "ffmpeg -ss " + start + " -i " + file_name + " -to " + end + " -r " + flamerate + " -vf scale=" + \
+                    resize + ":-1 output/output_gif.gif"
             
             else:
                 print("Please input from 1 to 5")
@@ -109,9 +119,9 @@ def main():
             print(sock.recv(1024).decode("utf-8"))
 
                 
-            continue_question = input('Do you want to continue ?\n' + \
-                                    '0 : No\n' + \
-                                    '1 : Yes\n')
+            continue_question = input("Do you want to continue ?\n" + \
+                                    "0 : No\n" + \
+                                    "1 : Yes\n")
                 
             sock.send(continue_question.encode("utf-8"))
             
