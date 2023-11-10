@@ -39,7 +39,7 @@ def main():
             print("Received file from client is: File name -> {}, File length => {}, File size -> {}".format(file_name,file_length,file_size))
             
             if file_size == 0:
-                raise("No data to read from client.")
+                raise Exception("No data to read from client.")
             
             
             with open(os.path.join(file_name), "wb+") as f:

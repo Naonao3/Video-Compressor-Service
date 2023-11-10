@@ -2,15 +2,16 @@ import socket
 import os
 import json
 import sys
-import time
+
 
 def main():
     
     sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+
     host = "localhost"
     port = 9001
     
-    print('connecting to {}'.format(host))
+    #print('connecting to {}'.format(host))
     
     try:
         sock.connect((host,port))
@@ -37,7 +38,7 @@ def main():
             if file_name[-3:] != "mp4":
                 raise Exception("File must be `mp4'.")
             
-            data_json ={
+            data_json = {
                 "file_name":file_name,
                 "file_length": len(file_name),
                 "file_size": file_size
@@ -52,11 +53,10 @@ def main():
                 sock.send(data)
                 data = f.read(1400)
         
-        #time.sleep(1)
-            print(sock.recv(1024).decode("utf-8"))
+            print(sock.recv(16).decode("utf-8"))
     
         while True:
-            """
+            
             command = ""
             height = ""
             width = ""
@@ -64,7 +64,7 @@ def main():
             end = ""
             flamerate = ""
             resize = ""
-            """
+            
 
             select_service = input("Please select service from 1 to 5...\n" + \
                                     "1 --> compress video file\n" + \
@@ -72,6 +72,7 @@ def main():
                                     "3 --> change the video aspect ration\n" + \
                                     "4 --> conver video to audio\n" + \
                                     "5 --> create Gif from video\n")
+            """
             if select_service == "1":
                 compression_level = input("Please select compression level from 1 to 3...\n" + \
                                         "1 --> high\n" + \
@@ -113,6 +114,40 @@ def main():
             
             else:
                 print("Please input from 1 to 5")
+            
+"""
+            if select_service == '1':                
+                select_level = input('Please select the degree of compression\n' + \
+                                    '0 : low\n' + \
+                                    '1 : medium\n' + \
+                                    '2 : high\n')
+                if select_level == '0':
+                    command = 'ffmpeg -i ' + file_name + ' -c:v libx264 output/output_low.mp4'
+                elif select_level == '1':
+                    command = 'ffmpeg -i ' + file_name + ' -c:v libx265 output/output_medium.mp4'
+                elif select_level == '2':
+                    command = 'ffmpeg -i ' + file_name + ' -c:v libx265 -b:v 500k output/output_high.mp4'
+                
+            elif select_service == '2':
+                height = input('Please enter the height (ex. 1280) : ')
+                width = input('Please enter the width (ex. 720) : ')
+                command = 'ffmpeg -i ' + file_name + ' -filter:v scale=' + height + ':' + width + ' -c:a copy output/output_scale.mp4'
+
+            elif select_service == '3':
+                height = input('Please enter the height (ex. 16) : ')
+                width = input('Please enter the width (ex. 9) : ')
+                command = 'ffmpeg -i ' + file_name + ' -pix_fmt yuv420p -aspect ' + height + ':' + width + ' output/output_aspect.mp4'
+
+            elif select_service == '4':
+                command = 'ffmpeg -i ' + file_name + ' -vn output/output_audio.mp3'
+
+            elif select_service == '5':
+                start = input('Input start position (ex. 00:00:20) : ')
+                end = input('Input end position (ex. 10) : ')
+                flamerate = input('Input flame rate (ex. 10) : ')
+                resize = input('Input resize (ex. 300) : ')
+                command = 'ffmpeg -ss ' + start + ' -i ' + file_name + ' -to ' + end + ' -r ' + flamerate + ' -vf scale=' + \
+                    resize + ':-1 output/output_gif.gif'
             
             sock.send(command.encode("utf-8"))
             
